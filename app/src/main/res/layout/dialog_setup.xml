@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#fff"
+
+    android:padding="@dimen/_20sdp"
+    android:orientation="vertical">
+    <TextView
+        android:textSize="@dimen/_15sdp"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/tvSetup"
+        android:textColor="#000"
+        android:text="Chọn lượng pin muốn thông báo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    <LinearLayout
+        android:id="@+id/layoutSb"
+        android:layout_below="@id/tvSetup"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <SeekBar
+            android:layout_below="@id/tvSetup"
+            android:id="@+id/sbPercent"
+            android:min="0"
+            android:max="100"
+            android:maxHeight="@dimen/_10sdp"
+            android:progress="80"
+            android:thumb="@drawable/custom_thumb"
+            android:progressDrawable="@drawable/custom_seekbar"
+            android:layout_width="0dp"
+            android:layout_weight="5"
+            android:layout_height="wrap_content">
+        </SeekBar>
+        <TextView
+            android:text="80%"
+            android:layout_marginLeft="@dimen/_3sdp"
+            android:textSize="@dimen/_17sdp"
+            android:textColor="#000"
+            android:id="@+id/tvPercent"
+            android:layout_below="@id/tvSetup"
+            android:layout_toRightOf="@id/sbPercent"
+            android:layout_width="0dp"
+            android:layout_weight="1.5"
+            android:layout_height="wrap_content">
+        </TextView>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_below="@+id/layoutSb"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <Button
+            android:id="@+id/btnOk"
+            android:layout_below="@id/layoutSb"
+            android:text="Đồng ý"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"/>
+        <Button
+            android:id="@+id/btnCancel"
+            android:layout_below="@id/layoutSb"
+            android:text="Hủy bỏ"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+</RelativeLayout>

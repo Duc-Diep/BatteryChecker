@@ -10,7 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 public class BatteryReceiver extends BroadcastReceiver {
-    private int percent;
+    private int percent = 1;
     private boolean check;
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -19,7 +19,6 @@ public class BatteryReceiver extends BroadcastReceiver {
         ImageView batteryImage = ((MainActivity) context).findViewById(R.id.imgPercent);
         String action = intent.getAction();
         if (action != null && action.equals(Intent.ACTION_BATTERY_CHANGED)) {
-
             // Status
             int status = intent.getIntExtra(BatteryManager.EXTRA_STATUS, -1);
             String message = "";
@@ -67,11 +66,15 @@ public class BatteryReceiver extends BroadcastReceiver {
                 batteryImage.setImageDrawable(res.getDrawable(R.drawable.b0));
             }
             //setting
-            if(percentage >= percent && check == true){
+            if(percentage >= percent && check==true){
                 Intent intent1 = new Intent(context, Music.class);
                 intent1.putExtra("Extra", "On");
                 context.startService(intent1);
                 this.check = false;
+            }
+            if(percent==0 && check==false){
+                Intent intent1 = new Intent(context, Music.class);
+                context.stopService(intent1);
             }
 
         }

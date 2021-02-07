@@ -19,7 +19,7 @@ public class MainActivity extends AppCompatActivity {
     private IntentFilter mIntentFilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
     Button btnSetting,btnCancelMusic;
     TextView tvNotice;
-    int percent;
+    int percent=80;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public void onStopTrackingTouch(SeekBar seekBar) {
-                        Toast.makeText(MainActivity.this, "Pin đạt " + tvPin.getText()+" sẽ thông báo", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, "Pin đạt " + tvPin.getText()+"% sẽ thông báo", Toast.LENGTH_SHORT).show();
                     }
                 });
                 btnOK.setOnClickListener(new View.OnClickListener() {
@@ -82,7 +82,8 @@ public class MainActivity extends AppCompatActivity {
         btnCancelMusic.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            Intent i = new Intent(MainActivity.this,Music.class);
+//            mBatteryReceiver.getRequest(0,false);
+            Intent i = new Intent(MainActivity.this, Music.class);
             stopService(i);
         }
     });
@@ -99,12 +100,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        registerReceiver(mBatteryReceiver,mIntentFilter);
+        unregisterReceiver(mBatteryReceiver);
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        registerReceiver(mBatteryReceiver,mIntentFilter);
-    }
+
 }

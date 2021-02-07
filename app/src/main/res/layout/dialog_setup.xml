@@ -23,7 +23,7 @@
         <SeekBar
             android:layout_below="@id/tvSetup"
             android:id="@+id/sbPercent"
-            android:min="0"
+            android:min="20"
             android:max="100"
             android:maxHeight="@dimen/_10sdp"
             android:progress="80"

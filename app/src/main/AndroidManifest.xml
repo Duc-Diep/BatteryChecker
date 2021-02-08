@@ -18,7 +18,11 @@
             </intent-filter>
         </activity>
         <service android:name=".Music"/>
-        <receiver android:name=".BatteryReceiver"/>
+        <receiver android:name=".BatteryReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BATTERY_CHANGED"/>
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

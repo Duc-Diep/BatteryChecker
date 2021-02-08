@@ -1,12 +1,16 @@
 package com.example.batterychecker;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import android.app.Dialog;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -26,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         tvNotice = findViewById(R.id.tvNotice);
         btnSetting = findViewById(R.id.btnSetting);
+
         btnSetting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -55,15 +60,24 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public void onStopTrackingTouch(SeekBar seekBar) {
-                        Toast.makeText(MainActivity.this, "Pin đạt " + tvPin.getText()+"% sẽ thông báo", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, "Pin đạt " + tvPin.getText()+" sẽ thông báo", Toast.LENGTH_SHORT).show();
                     }
                 });
                 btnOK.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        SharedPreferences sharedPreferences = getSharedPreferences("request", Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putInt("percent", percent);
+                        editor.putBoolean("check", true);
+                        editor.commit();
                         mBatteryReceiver.getRequest(percent,true);
-                        tvNotice.setText("Pin đạt " + percent + " sẽ thông báo");
+                        tvNotice.setText("Pin đạt " + percent + "% sẽ thông báo");
+                        Intent intent = new Intent(MainActivity.this,Music.class);
+                        intent.putExtra("Extra","Off");
+                        ContextCompat.startForegroundService(MainActivity.this,intent);
                         dialog.dismiss();
+
                     }
                 });
                 btnHuy.setOnClickListener(new View.OnClickListener() {
@@ -100,8 +114,18 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        unregisterReceiver(mBatteryReceiver);
+        registerReceiver(mBatteryReceiver,mIntentFilter);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        finish();
+    }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        registerReceiver(mBatteryReceiver,mIntentFilter);
+    }
 }

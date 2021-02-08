@@ -4,6 +4,7 @@ import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.BatteryManager;
 import android.widget.ImageView;
@@ -12,12 +13,19 @@ import android.widget.TextView;
 public class BatteryReceiver extends BroadcastReceiver {
     private int percent = 1;
     private boolean check;
+    private int currentBattery;
+
     @Override
     public void onReceive(Context context, Intent intent) {
         TextView statusLabel = ((MainActivity) context).findViewById(R.id.tvStatus);
         TextView percentageLabel = ((MainActivity) context).findViewById(R.id.tvPercent);
         ImageView batteryImage = ((MainActivity) context).findViewById(R.id.imgPercent);
         String action = intent.getAction();
+        if(action.equals(Intent.ACTION_PICK)){
+            Intent intent1 = new Intent(context, Music.class);
+            context.stopService(intent1);
+            ((MainActivity) context).onDestroy();
+        }
         if (action != null && action.equals(Intent.ACTION_BATTERY_CHANGED)) {
             // Status
             int status = intent.getIntExtra(BatteryManager.EXTRA_STATUS, -1);
@@ -32,9 +40,13 @@ public class BatteryReceiver extends BroadcastReceiver {
                     break;
                 case BatteryManager.BATTERY_STATUS_DISCHARGING:
                     message = "Không sạc";
+                    Intent intent1 = new Intent(context, Music.class);
+                    context.stopService(intent1);
                     break;
                 case BatteryManager.BATTERY_STATUS_NOT_CHARGING:
                     message = "Không sạc";
+                    Intent intent2 = new Intent(context, Music.class);
+                    context.stopService(intent2);
                     break;
                 case BatteryManager.BATTERY_STATUS_UNKNOWN:
                     message = "Unknown";
@@ -45,6 +57,7 @@ public class BatteryReceiver extends BroadcastReceiver {
             int scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
             int percentage = level * 100 / scale;
             percentageLabel.setText(percentage + "%");
+            currentBattery = percentage;
 
 
             // Image
@@ -76,12 +89,23 @@ public class BatteryReceiver extends BroadcastReceiver {
                 Intent intent1 = new Intent(context, Music.class);
                 context.stopService(intent1);
             }
-
         }
+
     }
     public void getRequest(int per, boolean check){
         this.percent = per;
         this.check= check;
     }
 
+    public int getCurrentBattery() {
+        return currentBattery;
+    }
+
+    public int getPercent() {
+        return percent;
+    }
+
+    public boolean isCheck() {
+        return check;
+    }
 }

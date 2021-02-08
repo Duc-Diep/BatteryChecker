@@ -62,7 +62,7 @@
 
         <Button
             android:id="@+id/btnCancelMusic"
-            android:text="Tắt nhạc"
+            android:text="Hủy thông báo"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="@dimen/_20sdp"

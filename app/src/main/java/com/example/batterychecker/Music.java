@@ -8,6 +8,7 @@ import android.app.Service;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.os.Build;
@@ -36,16 +37,17 @@ public class Music extends Service {
         {
             mediaPlayer.start();
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-            startMyOwnForeground();
-        else
-            startForeground(1, new Notification());
+
         return START_NOT_STICKY;
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+            startMyOwnForeground();
+        else
+            startForeground(1, new Notification());
     }
 
 
@@ -67,12 +69,24 @@ public class Music extends Service {
             NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
             assert manager != null;
             manager.createNotificationChannel(chan);
+            SharedPreferences sharedPreferences = getSharedPreferences("request",Context.MODE_PRIVATE);
+            int percent = sharedPreferences.getInt("percent",0);
+            //Intent mo app
+            Intent intentOpenApp = new Intent(this, MainActivity.class);
+            intentOpenApp.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            PendingIntent pendingIntentOpenApp = PendingIntent.getActivity(this, 0, intentOpenApp, 0);
+            //Intent stop service
+            Intent intentStopSv = new Intent(this,BatteryReceiver.class);
+            PendingIntent pendingIntentStopSv = PendingIntent.getBroadcast(this, 0, intentStopSv, 0);
             NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID);
             Notification notification = notificationBuilder.setOngoing(true)
-                    .setSmallIcon(R.drawable.ic_launcher_background)
-                    .setContentTitle("App is running in background")
+                    .setSmallIcon(R.drawable.battery)
+                    .setContentTitle("Pin đến mức "+ percent + "% sẽ thông báo")
                     .setPriority(NotificationManager.IMPORTANCE_MIN)
                     .setCategory(Notification.CATEGORY_SERVICE)
+                    .setContentIntent(pendingIntentOpenApp)
+                    .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                    .addAction(R.drawable.battery, "Tắt thông báo",pendingIntentStopSv)
                     .build();
             startForeground(2, notification);
         }

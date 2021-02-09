@@ -71,10 +71,9 @@ public class MainActivity extends AppCompatActivity {
                         editor.putInt("percent", percent);
                         editor.putBoolean("check", true);
                         editor.commit();
-                        mBatteryReceiver.getRequest(percent,true);
                         tvNotice.setText("Pin đạt " + percent + "% sẽ thông báo");
                         Intent intent = new Intent(MainActivity.this,Music.class);
-                        intent.putExtra("Extra","Off");
+                        intent.putExtra("Extra","On");
                         ContextCompat.startForegroundService(MainActivity.this,intent);
                         dialog.dismiss();
 
@@ -120,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        finish();
+        registerReceiver(mBatteryReceiver,mIntentFilter);
     }
 
     @Override

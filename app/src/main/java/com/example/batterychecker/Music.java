@@ -47,9 +47,11 @@ public class Music extends Service {
             mediaPlayer.start();
             onFullBattery();
         }
-//        else if(x.equals("Stop")){
-//            unregisterReceiver(broadcastReceiver);
-//        }
+        else if(x.equals("Stop")){
+            mediaPlayer.stop();
+            mediaPlayer.reset();
+            unregisterReceiver(broadcastReceiver);
+        }
         return START_NOT_STICKY;
     }
 
@@ -135,12 +137,12 @@ public class Music extends Service {
             int percent = sharedPreferences.getInt("percent", 0);
             int status = intent.getIntExtra(BatteryManager.EXTRA_STATUS, -1);
             boolean check = sharedPreferences.getBoolean("check", false);
-//            if(status==BatteryManager.BATTERY_STATUS_DISCHARGING){
-//                Intent intentStop = new Intent(context, Music.class);
-//                intentStop.putExtra("Extra", "Stop");
-//                startService(intentStop);
-//            }
-//            else
+            if(status==BatteryManager.BATTERY_STATUS_DISCHARGING){
+                Intent intentStop = new Intent(context, Music.class);
+                intentStop.putExtra("Extra", "Stop");
+                stopService(intentStop);
+            }
+            else
                 if (percentage >= percent && check == true&&status==BatteryManager.BATTERY_STATUS_CHARGING) {
                 Intent intentStart = new Intent(context, Music.class);
                 intentStart.putExtra("Extra", "Start");
